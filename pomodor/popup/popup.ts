@@ -88,8 +88,8 @@ function updateTimer() {
   chrome.storage.sync.get(
     ['timer', 'POMODORTime', 'isRunning', 'complete'],
     ({
-      timer = 0,
-      POMODORTime = 1,
+      timer = 1,
+      POMODORTime = 0,
       isRunning = false,
     }: {
       timer: number;
@@ -98,15 +98,13 @@ function updateTimer() {
     }) => {
       let SECS = 60;
       const secInMinute = timer / 60;
-
       if (timer == 0) SECS = 0;
-
       const sec = SECS - (timer % 60);
       const timerInMinute = Math.ceil(POMODORTime - secInMinute);
       if (isRunning) {
         console.log('complete');
         console.log(sec);
-        if (timerInMinute <= 0 && sec === 1) {
+        if (POMODORTime * 60 + 59 <= timer) {
           restTimer();
           // @ts-ignore
           chrome.storage.sync.set({ complete: true });
